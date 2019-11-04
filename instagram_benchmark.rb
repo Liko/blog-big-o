@@ -1,8 +1,53 @@
 require 'benchmark'
 
-def performBenchmark(accounts, complexity)
+# these two lines log the console output to a file
+$stdout = File.new('benchmark.log', 'w')
+$stdout.sync = true
 
-  Benchmark.bm do |x|
+#generating arrays with unique values, of different size
+accounts = {
+  :fish => [*1..10],
+  :me => [*1..100],
+  :dad => [*1..1_000],
+  :dog => [*1..10_000],
+  :gf => [*1..100_000],
+  :ja => [*1..1_000_000],
+  :duke => [*1..10_000_000],
+  :kk => [*1..100_000_000]
+  }
+
+algorithms = [
+  "O(1)",
+  "O(log n)",
+  "O(n)",
+  "O(n log n)",
+  "O(n^2)"
+]
+
+algorithms.each do |algorithm|
+  puts "\n\nperforming #{algorithm} benchmark \n\n"
+  shuffle_accounts(accounts) if algorithm == "O(n log n)"
+  remove_big_accounts(accounts) if algorithm == "O(n^2)"
+  performBenchmark(accounts, algorithm)
+end
+
+def shuffle_accounts(accounts)
+  accounts.each do |account|
+    account[1].shuffle!
+  end
+end
+
+def remove_big_accounts(accounts) 
+  #remove at your own risk - some of these will take years to run, no joke!
+  accounts.delete(:ja)
+  accounts.delete(:duke)
+  accounts.delete(:kk)
+end
+
+
+
+def performBenchmark(accounts, complexity)
+  Benchmark.bmbm do |x|
     accounts.each do |account|
       followers = account[1]
       x.report(:"#{account[0]}") {
@@ -27,12 +72,12 @@ def getFirstFollowerInArray(followers)
 end
 
 def retrieveRecentFollowerLogarithmic(followers)
-  target = followers.count*0.9
+  target = followers.count * 0.9
   followers.bsearch {|follower| follower == target}
 end
 
 def retrieveRecentFollowerLinear(followers)
-  target = followers.count*0.9
+  target = followers.count * 0.9
   followers.find {|follower| follower == target}
 end
 
@@ -88,42 +133,4 @@ def mergesort(array) # borrowed from https://gist.github.com/aspyct/3433278
   end
 
   return array
-end
-
-def shuffle_accounts(accounts)
-  accounts.each do |account|
-    account[1].shuffle!
-  end
-end
-
-def remove_big_accounts(accounts)
-  accounts.delete(:ja)
-  accounts.delete(:duke)
-  accounts.delete(:kk)
-end
-
-accounts = {
-  :fish => [*1..10],
-  :me => [*1..100],
-  :dad => [*1..1_000],
-  :dog => [*1..10_000],
-  :gf => [*1..100_000],
-  :ja => [*1..1_000_000],
-  :duke => [*1..10_000_000],
-  :kk => [*1..100_000_000]
-  }
-
-algorithms = [
-  "O(1)",
-  "O(log n)",
-  "O(n)",
-  "O(n log n)",
-  "O(n^2)",
-]
-
-algorithms.each do |algorithm|
-  puts "\n\nperforming #{algorithm} benchmark \n\n"
-  shuffle_accounts(accounts) if algorithm == "O(n log n)"
-  remove_big_accounts(accounts) if algorithm == "O(n^2)"
-  performBenchmark(accounts, algorithm)
 end

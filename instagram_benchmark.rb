@@ -17,25 +17,28 @@ def remove_big_accounts(accounts)
   accounts.delete(:kk)
 end
 
-
 def performBenchmark(accounts, complexity)
   Benchmark.bmbm do |x|
     accounts.each do |account|
       followers = account[1]
       x.report(:"#{account[0]}") {
-        if complexity == "O(1)"
-          getFirstFollowerInArray(followers)
-        elsif complexity == "O(log n)"
-          retrieveRecentFollowerLogarithmic(followers)
-        elsif complexity == "O(n)"
-          retrieveRecentFollowerLinear(followers)
-        elsif complexity == "O(n log n)"
-          mergesort(followers)
-        elsif complexity == "O(n^2)"
-          introduceFollowersToEachother(followers)
-        end
+        selectMethodForComplexity(complexity, followers)
       }
     end
+  end
+end
+
+def selectMethodForComplexity(complexity, followers)
+  if complexity == "O(1)"
+    getFirstFollowerInArray(followers)
+  elsif complexity == "O(log n)"
+    retrieveRecentFollowerLogarithmic(followers)
+  elsif complexity == "O(n)"
+    retrieveRecentFollowerLinear(followers)
+  elsif complexity == "O(n log n)"
+    mergesort(followers)
+  elsif complexity == "O(n^2)"
+    introduceFollowersToEachother(followers)
   end
 end
 

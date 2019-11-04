@@ -4,33 +4,6 @@ require 'benchmark'
 $stdout = File.new('benchmark.log', 'w')
 $stdout.sync = true
 
-#generating arrays with unique values, of different size
-accounts = {
-  :fish => [*1..10],
-  :me => [*1..100],
-  :dad => [*1..1_000],
-  :dog => [*1..10_000],
-  :gf => [*1..100_000],
-  :ja => [*1..1_000_000],
-  :duke => [*1..10_000_000],
-  :kk => [*1..100_000_000]
-  }
-
-algorithms = [
-  "O(1)",
-  "O(log n)",
-  "O(n)",
-  "O(n log n)",
-  "O(n^2)"
-]
-
-algorithms.each do |algorithm|
-  puts "\n\nperforming #{algorithm} benchmark \n\n"
-  shuffle_accounts(accounts) if algorithm == "O(n log n)"
-  remove_big_accounts(accounts) if algorithm == "O(n^2)"
-  performBenchmark(accounts, algorithm)
-end
-
 def shuffle_accounts(accounts)
   accounts.each do |account|
     account[1].shuffle!
@@ -43,7 +16,6 @@ def remove_big_accounts(accounts)
   accounts.delete(:duke)
   accounts.delete(:kk)
 end
-
 
 
 def performBenchmark(accounts, complexity)
@@ -68,7 +40,7 @@ def performBenchmark(accounts, complexity)
 end
 
 def getFirstFollowerInArray(followers)
-  followers[0]
+  followers.first
 end
 
 def retrieveRecentFollowerLogarithmic(followers)
@@ -82,10 +54,10 @@ def retrieveRecentFollowerLinear(followers)
 end
 
 def introduceFollowersToEachother(followers)
-  followers.each do |follower_introducing|
-    followers.each do |follower_to_meet|
-      #simulate interaction of follower to each other follower
-      follower_introducing == follower_to_meet
+  followers.each do |follower_introducer|
+    followers.each do |follower_introducee|
+      #simulating introduction of a follower to each other follower
+      follower_introducer == follower_introducee
     end
   end
 end
@@ -133,4 +105,31 @@ def mergesort(array) # borrowed from https://gist.github.com/aspyct/3433278
   end
 
   return array
+end
+
+#generating arrays with unique values, of different size
+accounts = {
+  :fish => [*1..10],
+  :me => [*1..100],
+  :dad => [*1..1_000],
+  :dog => [*1..10_000],
+  :gf => [*1..100_000],
+  :ja => [*1..1_000_000],
+  :duke => [*1..10_000_000],
+  :kk => [*1..100_000_000]
+  }
+
+complexities = [
+  "O(1)",
+  "O(log n)",
+  "O(n)",
+  "O(n log n)",
+  "O(n^2)"
+]
+
+complexities.each do |complexity|
+  puts "\n\nperforming #{complexity} benchmark \n\n"
+  shuffle_accounts(accounts) if complexity == "O(n log n)"
+  remove_big_accounts(accounts) if complexity == "O(n^2)"
+  performBenchmark(accounts, complexity)
 end

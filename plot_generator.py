@@ -3,30 +3,6 @@ import chart_studio.plotly as plotly
 import plotly.graph_objects as go
 import numpy as np
 
-# x = [0.000024,
-# 0.000191,
-# 0.001819,
-# 0.025826,
-# 0.313013,
-# 3.641381,
-# 43.794076,
-# 485.207768])
-
-# y = [10,
-# 100,
-# 1000,
-# 10000,
-# 100000,
-# 1000000,
-# 10000000,
-# 100000000]
-
-# fig = go.Figure(data=go.Scatter(x=x, y=y))
-# fig.show()
-
-np.random.seed(1)
-
-
 x = [
     10,
     100,
@@ -98,7 +74,6 @@ y_plots = {
     "O(n^2)" : y5
 }
 
-# Create traces
 fig = go.Figure()
 
 for algorithm, y_values in y_plots.iteritems():
@@ -106,10 +81,11 @@ for algorithm, y_values in y_plots.iteritems():
                     mode='lines+markers',
                     name=algorithm))
 
-
-
 fig.update_layout(
     xaxis_type="log", 
     yaxis_type="log",
-    title_text='My plot')
+    xaxis_title="Number of Instagram Followers",
+    yaxis_title="Time to compute (seconds)",
+    title_text='How various Algorithm Complexities fare in computing increasing magnitudes of Instagram Followers')
+
 fig.show()
